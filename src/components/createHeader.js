@@ -22,12 +22,12 @@ export const createHeader = (parent) => {
 
   const headerTitle = createElement("h2", {
     className: "header__subtitle",
-    textContent: "Categories",
+    textContent: "Категории",
   });
 
   const headerBtn = createElement("button", {
     className: "header__btn",
-    textContent: "Add category",
+    textContent: "Добавить категорию",
   });
 
   container.append(headerLogoLink, headerTitle, headerBtn);
