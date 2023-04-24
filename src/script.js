@@ -8,7 +8,7 @@ import {
 import { createCategory } from "./components/createCategory.js";
 import { createEditCategory } from "./components/createEditCategory.js";
 import { createHeader } from "./components/createHeader.js";
-import { createPairs } from "./components/createPairs.js";
+import { CreatePairs } from "./components/createPairs.js";
 import { showAlert } from "./components/showAlert.js";
 import { createElement } from "./helper/createElement.js";
 
@@ -18,7 +18,7 @@ const initApp = async () => {
   const headerObj = createHeader(headerParent);
   const categoryObj = createCategory(appElem);
   const editCategoryObj = createEditCategory(app);
-  const pairsObj = createPairs(app);
+  const pairsObj = new CreatePairs(app);
 
   const allSectionUnmount = () => {
     [categoryObj, editCategoryObj, pairsObj].forEach((obj) => obj.unmount());

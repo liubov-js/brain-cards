@@ -2,89 +2,94 @@ import { createElement } from "../helper/createElement.js";
 import { shufflePairs } from "../helper/shufflePairs.js";
 import { showAlert } from "./showAlert.js";
 
-export const createPairs = (app) => {
-  const pairs = createElement("section", {
-    className: "card section-offset",
-  });
+export class CreatePairs {
+  #index = 1;
 
-  const container = createElement("div", {
-    className: "container card__container",
-  });
+  constructor(app) {
+    this.app = app;
+    this.dataCards = [];
 
-  const buttonReturn = createElement("button", {
-    className: "card__return",
-    ariaLabel: "Возврат к категориям",
-  });
+    this.pairs = createElement("section", {
+      className: "card section-offset",
+    });
 
-  const buttonCard = createElement("button", {
-    className: "card__item",
-  });
+    this.container = createElement("div", {
+      className: "container card__container",
+    });
 
-  const front = createElement("span", {
-    className: "card__front",
-    textContent: "1",
-  });
+    this.buttonReturn = createElement("button", {
+      className: "card__return",
+      ariaLabel: "Возврат к категориям",
+    });
 
-  const back = createElement("span", {
-    className: "card__back",
-    textContent: "2",
-  });
+    this.buttonCard = createElement("button", {
+      className: "card__item",
+    });
 
-  buttonCard.append(front, back);
-  container.append(buttonReturn, buttonCard);
-  pairs.append(container);
+    this.front = createElement("span", {
+      className: "card__front",
+      textContent: "1",
+    });
 
-  let dataCards = [];
+    this.back = createElement("span", {
+      className: "card__back",
+      textContent: "2",
+    });
 
-  const flipCard = () => {
-    buttonCard.classList.add("card__item_flipped");
-    buttonCard.removeEventListener("click", flipCard);
+    this.buttonCard.append(this.front, this.back);
+    this.container.append(this.buttonReturn, this.buttonCard);
+    this.pairs.append(this.container);
+
+    this.flipCard = this.flipCard.bind(this);
+  }
+
+  flipCard() {
+    this.buttonCard.classList.add("card__item_flipped");
+    this.buttonCard.removeEventListener("click", this.flipCard);
 
     setTimeout(() => {
-      buttonCard.classList.remove("card__item_flipped");
+      this.buttonCard.classList.remove("card__item_flipped");
 
       setTimeout(() => {
-        buttonCard.index++;
+        this.#index++;
 
-        if (buttonCard.index === dataCards.length) {
-          front.textContent = "The end";
+        if (this.#index === this.dataCards.length) {
+          this.front.textContent = "The end";
           showAlert("Вернемся к категориям", 2000);
 
           setTimeout(() => {
-            buttonReturn.click();
+            this.buttonReturn.click();
           }, 2000);
           return;
         }
 
-        front.textContent = dataCards[buttonCard.index][0];
-        back.textContent = dataCards[buttonCard.index][1];
+        this.front.textContent = this.dataCards[this.#index][0];
+        this.back.textContent = this.dataCards[this.#index][1];
         setTimeout(() => {
-          buttonCard.addEventListener("click", flipCard);
+          this.buttonCard.addEventListener("click", this.flipCard);
         }, 200);
       }, 100);
     }, 1000);
-  };
+  }
 
-  const cardController = (data) => {
-    dataCards = [...data];
-    buttonCard.index = 0;
+  cardController(data) {
+    this.dataCards = [...data];
+    this.#index = 0;
 
-    front.textContent = data[buttonCard.index][0];
-    back.textContent = data[buttonCard.index][1];
+    this.front.textContent = this.dataCards[this.#index][0];
+    this.back.textContent = this.dataCards[this.#index][1];
 
-    buttonCard.addEventListener("click", flipCard);
-  };
+    this.buttonCard.addEventListener("click", this.flipCard);
+  }
 
-  const mount = (data) => {
-    app.append(pairs);
+  mount(data) {
+    this.app.append(this.pairs);
     const shuffledPairs = shufflePairs(data.pairs);
-    cardController(shuffledPairs);
-  };
+    this.cardController(shuffledPairs);
+  }
 
-  const unmount = () => {
-    pairs.remove();
-    buttonCard.removeEventListener("click", flipCard);
-  };
-
-  return { buttonReturn, mount, unmount };
-};
+  unmount() {
+    this.pairs.remove();
+    this.buttonCard.removeEventListener("click", this.flipCard);
+  }
+}
